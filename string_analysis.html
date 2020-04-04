@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afficher les propriétés d'une chaîne de caractères</title>
+</head>
+<body>
+
+    <h1 id="titre"></h1>
+    <input type="text" name="chaine" id="chaine" oninput="analyser();">
+    <input type="button" id="effacer" onclick="effacer();">
+    <input type="button" id="aide" onclick="afficher_aide();">
+    <textarea name="affichage" id="affichage" cols="60" rows="10" readonly></textarea>
+
+    <script>
+        /* déclaration des éléments HTML */
+        let page = document.body;
+        let page_elements = page.children;
+        let titre = document.getElementById("titre");
+        let chaine = document.getElementById("chaine");
+        let btn_effacer = document.getElementById("effacer");
+        let btn_aide = document.getElementById("aide");
+        let affichage = document.getElementById("affichage");
+    
+        /* déclaration des données */
+        const TITRE = {
+            principal: "Afficher les propriétés d'une chaîne de caractères"
+        };
+        const BOUTON = {
+            effacer: "Effacer",
+            aide: "Aide"
+        };
+        const MESSAGE = {
+            defaut: "Veuillez entrer une chaîne de caractères à analyser",
+            aide: "Il suffit d'entrer une chaîne de caractères dans le champ texte.\nDes informations sur la chaîne s'affichent alors dans la zone de texte.\nLe bouton effacer réinitialise les données."
+        };
+    
+        const AFFICHAGE = {
+            valeur: "valeur de la chaîne",
+            longueur: "nombre de caractères",
+            mots: "nombre de mots"
+        };
+    
+        /* mappage des données de la vue */
+        titre.innerHTML = TITRE.principal;
+        btn_effacer.value = BOUTON.effacer;
+        btn_aide.value = BOUTON.aide;
+        affichage.value = MESSAGE.defaut;
+    
+        /* application des styles */
+        page.style.padding = "25px";
+        page.style.backgroundColor = "#FAFAFA";
+        for ( const element of page_elements ) {
+            if ( element.tagName !== "SCRIPT" ) {
+                element.style.display = "block";
+                element.style.margin = "10px";
+            }
+        }
+        titre.style.color = "#ABABAB";
+    
+        /* déclaration des fonctions */
+        function analyser() {
+            if ( !chaineVide( chaine.value ) ) {
+                let chaine_securisee = securiser( chaine.value );
+                affichage.value = "";
+                affichage.value += AFFICHAGE.valeur + " = " + chaine_securisee + "\n";
+                affichage.value += AFFICHAGE.longueur + " = " + chaine_securisee.length + "\n";
+                affichage.value += AFFICHAGE.mots + " = " + compter_mots( chaine_securisee ) + "\n";
+            } else { effacer(); }
+        }
+        function compter_mots( chaine ) {
+            let tableau_chaine = chaine.split( "\u0020" );
+            let nb_mots = 0;
+            for( var i = 0; i < tableau_chaine.length; i++ ) {
+                if ( tableau_chaine[i] !== "" )
+                    nb_mots++;
+            }
+            return nb_mots;
+        }
+        function chaineVide() {
+            if ( chaine.value === "" ) { return true; }
+            else { return false; }
+        }
+        function securiser() {
+            let chaine_securisee = encodeURI( chaine.value );
+            chaine_securisee = decodeURI( chaine_securisee );
+            return chaine_securisee;
+        }
+        function effacer() {
+            chaine.value = "";
+            affichage.value = MESSAGE.defaut;
+        }
+        function afficher_aide() {
+            alert( MESSAGE.aide );
+        }
+    </script>
+    
+</body>
+</html>
